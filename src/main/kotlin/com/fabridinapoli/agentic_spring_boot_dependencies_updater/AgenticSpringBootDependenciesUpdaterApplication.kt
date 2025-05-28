@@ -1,11 +1,19 @@
-package com.fabridinapoli.spring_boot_dependencies_updater
+package com.fabridinapoli.agentic_spring_boot_dependencies_updater
 
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
+import ai.koog.agents.ext.agent.simpleSingleRunAgent
+import ai.koog.prompt.executor.clients.openai.OpenAIModels
+import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
+import kotlinx.coroutines.runBlocking
 
-@SpringBootApplication
-class AgenticSpringBootDependenciesUpdaterApplication
+fun main() = runBlocking {
+    val apiKey = System.getenv("OPENAI_API_KEY")
 
-fun main(args: Array<String>) {
-    runApplication<AgenticSpringBootDependenciesUpdaterApplication>(*args)
+    val agent = simpleSingleRunAgent(
+        executor = simpleOpenAIExecutor(apiKey),
+        systemPrompt = "You are a helpful assistant. Answer user questions concisely.",
+        llmModel = OpenAIModels.Chat.GPT4o
+    )
+
+    val result = agent.runAndGetResult("Hello! How can you help me?")
+    println(result)
 }
